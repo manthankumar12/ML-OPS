@@ -2,8 +2,8 @@ name: Deploy to Snowflake
 
 on:
   push:
-    paths:
-      - 'outputs/**'
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
       run: pip install snowflake-connector-python pandas
 
     - name: Run Python script
-      run: python output_20240507105531.py
+      run: python ${{ github.workspace }}/outputs/output_20240507105531.py
       env:
         SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
@@ -32,4 +32,3 @@ jobs:
         SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
         SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
         SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
-
