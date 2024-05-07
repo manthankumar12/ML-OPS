@@ -21,6 +21,9 @@ jobs:
 
     - name: Install dependencies
       run: pip install snowflake-connector-python pandas
+      
+    - name: Install Snowpark
+      run: pip install snowflake-snowpark-python
 
     - name: Run Python script
       run: python ${{ github.workspace }}/outputs/output_20240507105531.py
