@@ -1,6 +1,6 @@
 schemaVersion: 3
 meta:
-  sourceVersionId: f3b3200d-0436-4165-9410-971fd9c36607 # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
+  sourceVersionId: f506fd90-e769-453d-9dbe-ca5e7871222d # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
   description: null
   projectId: 1a26096c-6bba-4320-b949-f45f626676e8 # DO NOT CHANGE - Unique ID of the project from which this file was generated
   title: py_extraction
@@ -40,11 +40,6 @@ cells:
         from snowflake.snowpark import DataFrame 
         from snowflake.snowpark.functions import col
 
-        def hello(session: Session) -> DataFrame:
-            df = session.table("SNOWLENS.DEMO.QUERY_HISTORY_TABLE")
-            return df
-
-        # Define connection parameters
         connection_params = {
             "ACCOUNT": "ls31517.ap-southeast-1",
             "USER": "manthan",
@@ -55,11 +50,14 @@ cells:
             "SCHEMA": "DEMO"
         }
 
-        # Create a Snowpark session using the defined connection parameters
-        session = Session.builder.configs(connection_params).create()
+        def hello(session: Session) -> DataFrame:
+            df = session.table("SNOWLENS.DEMO.QUERY_HISTORY_TABLE")
+            return df
 
-        # Fetch the table and display it
-        print(hello(session).show())
+
+        if __name__ == "__main__":
+            session = Session.builder.configs(connection_params).create()
+            print (hello (session).show())
   - cellType: CODE
     cellId: d4aea27d-9560-4030-93ec-13dadb2c81a6 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
     cellLabel: null
@@ -72,11 +70,6 @@ cells:
         from snowflake.snowpark import DataFrame 
         from snowflake.snowpark.functions import col
 
-        def hello(session: Session) -> DataFrame:
-            df = session.table("SNOWLENS.DEMO.QUERY_HISTORY_TABLE")
-            return df
-
-        # Define connection parameters
         connection_params = {
             "ACCOUNT": "ls31517.ap-southeast-1",
             "USER": "manthan",
@@ -87,11 +80,14 @@ cells:
             "SCHEMA": "DEMO"
         }
 
-        # Create a Snowpark session using the defined connection parameters
-        session = Session.builder.configs(connection_params).create()
+        def hello(session: Session) -> DataFrame:
+            df = session.table("SNOWLENS.DEMO.QUERY_HISTORY_TABLE")
+            return df
 
-        # Fetch the table and display it
-        print(hello(session).show())
+
+        if __name__ == "__main__":
+            session = Session.builder.configs(connection_params).create()
+            print (hello (session).show())
   - cellType: CODE
     cellId: 7fce33c8-6f61-4ebb-be02-b593ef478c80 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
     cellLabel: null
