@@ -17,11 +17,14 @@ connection_params = {
 }
 
 # Create a Snowpark session using the defined connection parameters
-session = Session.builder.configs(connection_params).create()
 
 def hello(session: Session) -> DataFrame:
     df = session.table("SNOWLENS.DEMO.QUERY_HISTORY_TABLE")
     return df
 
 # Fetch the table and display it
-print(hello(session).show())
+
+
+if __name__ == "__main__":
+    session = Session.builder.configs(connection_params).create()
+    print (hello (session).show())
