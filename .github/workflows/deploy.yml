@@ -28,7 +28,7 @@ jobs:
         SNOWSQL_DEST=~/bin SNOWSQL_LOGIN_SHELL=~/.profile bash snowsql-1.2.9-linux_x86_64.bash
 
     - name: Run Python script
-      run: python ${{ github.workspace }}/outputs/output_20240507105531.py
+      run: python ${{ github.workspace }}/outputs/output_20240507130721.py
       env:
         SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
