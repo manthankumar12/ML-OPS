@@ -44,6 +44,6 @@ jobs:
                                         RETURNS STRING
                                         LANGUAGE PYTHON
                                         RUNTIME_VERSION = '\''3.8'\''
-                                        PACKAGES = ( )
+                                        PACKAGES = ('SNOWFLAKE' )
                                         IMPORTS = ('\''@~/${{ github.ref_name }}/storedproc.py'\'')
                                         HANDLER = '\''storedproc.run'\'';' -o friendly=false
