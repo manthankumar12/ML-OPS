@@ -43,7 +43,7 @@ jobs:
           ~/bin/snowsql -q 'CREATE OR REPLACE PROCEDURE  MYPROC(message STRING)
                                         RETURNS STRING
                                         LANGUAGE PYTHON
-                                        RUNTIME_VERSION = '\''3.8'\''
-                                        PACKAGES = ('snowflake-snowpark-python')
+                                        RUNTIME_VERSION = '\''3.10'\''
+                                        PACKAGES = (' ')
                                         IMPORTS = ('\''@~/${{ github.ref_name }}/storedproc.py'\'')
                                         HANDLER = '\''storedproc.run'\'';' -o friendly=false
