@@ -40,5 +40,5 @@ jobs:
                                         LANGUAGE PYTHON
                                         RUNTIME_VERSION = '\''3.8'\''
                                         PACKAGES = ('\''snowflake-snowpark-python'\'')
-                                        IMPORTS = ('\''@~/${{ github.ref_name }}/outputs/output_20240507130721.py'\'')
+                                        IMPORTS = ('\''@~/${{ github.ref_name }}/branches/main/outputs/output_20240507130721.py'\'')
                                         HANDLER = '\''output_20240507130721.hello'\'';' -o friendly=false
