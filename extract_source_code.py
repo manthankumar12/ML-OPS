@@ -12,7 +12,7 @@ def extract_source_code(yaml_file_path):
         source_code = data['cells'][0]['config']['source']
 
         return source_code
-    except Exception as e:
+    except Exception as e: 
         print(f"Error occurred while extracting source code: {str(e)}")
         return None
 
