@@ -39,7 +39,7 @@ def save_source_code(source_code, output_dir):
         print(f"Error occurred while saving source code: {str(e)}")
         return None
 def main():
-    yaml_file_path = 'HEX/py_extraction.yaml'  # Replace with the path to your YAML file
+    yaml_file_path = 'hex/py_extraction.yaml'  # Replace with the path to your YAML file
     output_dir = 'outputs'  # Output directory path
 
     # Extract source code from YAML
