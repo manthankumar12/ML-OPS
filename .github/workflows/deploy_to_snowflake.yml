@@ -2,8 +2,9 @@ name: Deploy to Snowflake
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'outputs/**'
+  workflow_dispatch:    
 
 jobs:
   deploy:
