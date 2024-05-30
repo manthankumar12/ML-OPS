@@ -21,6 +21,14 @@ jobs:
       - name: Install Snowflake
         run: |
           pip install snowflake
+               
+      - name: Install pandas
+        run: |
+          pip install pandas
+           
+      - name: Install snowflake-connector-python
+        run: |
+          pip install snowflake-connector-python
 
       - name: Deploy Python Code
         env:
