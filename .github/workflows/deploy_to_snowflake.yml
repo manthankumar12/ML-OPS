@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'outputs/**'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -24,12 +24,12 @@ jobs:
 
       - name: Deploy Python Code
         env:
-          SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT  }}
-          SF_USERNAME: ${{ secrets.SNOWFLAKE_USER  }}
+          SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SF_USERNAME: ${{ secrets.SNOWFLAKE_USER }}
           SF_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE  }}
-          SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE  }}
-          SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA  }}
-          SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE  }}
+          SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+          SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
           python outputs/output_20240529100927.py
