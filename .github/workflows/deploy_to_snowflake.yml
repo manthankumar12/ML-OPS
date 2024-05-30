@@ -32,4 +32,4 @@ jobs:
           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA  }}
           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE  }}
         run: |
-          python output_20240529100927.py
+          python outputs/output_20240529100927.py
