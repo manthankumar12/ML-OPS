@@ -1,47 +1,3 @@
-# name: Deploy to Snowflake
-
-# on:
-#   push:
-#     paths:
-#       - 'outputs/**'
-#   workflow_dispatch:
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-
-#       - name: Install Python
-#         uses: actions/setup-python@v2.2.1
-#         with:
-#           python-version: 3.8.x
-
-#       - name: Install Snowflake
-#         run: |
-#           pip install snowflake
-               
-#       - name: Install pandas
-#         run: |
-#           pip install pandas
-           
-#       - name: Install snowflake-connector-python
-#         run: |
-#           pip install snowflake-connector-python
-
-#       - name: Deploy Python Code
-#         env:
-#           SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-#           SF_USERNAME: ${{ secrets.SNOWFLAKE_USER }}
-#           SF_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-#           SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-#           SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-#           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
-#           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-#         run: |
-#           python outputs/output_20240529100927.py
-
 name: Deploy to Snowflake
 
 on:
@@ -74,7 +30,7 @@ jobs:
         run: |
           pip install snowflake-connector-python
 
-      - name: Deploy Python Code
+      - name: Identify and Deploy Python Code
         env:
           SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SF_USERNAME: ${{ secrets.SNOWFLAKE_USER }}
@@ -84,7 +40,15 @@ jobs:
           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
-          latest_file=$(ls -tp outputs/*.py | grep -v / | head -n 1)
-          echo "Deploying $latest_file"
-          python $latest_file
-
+          # Find the most recent Python file in the outputs directory
+          latest_file=$(find outputs -type f -name "*.py" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2)
+          echo "Most recent file: $latest_file"
+          
+          # Check if the file exists
+          if [ -f "$latest_file" ]; then
+            echo "Deploying $latest_file"
+            python "$latest_file"
+          else
+            echo "No Python file found in outputs directory."
+            exit 1
+          fi
