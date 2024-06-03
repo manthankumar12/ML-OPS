@@ -24,7 +24,7 @@ jobs:
 
       - name: Install pandas
         run: |
-          pip install pandas
+          pip install snowflake-connector-python[pandas]
 
       - name: Install sklearn
         run: |
