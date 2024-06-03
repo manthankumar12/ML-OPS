@@ -1,0 +1,214 @@
+schemaVersion: 3
+meta:
+  sourceVersionId: 0b188317-223f-44aa-a013-ede38a71d433 # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
+  description: null
+  projectId: 6de9a3fd-0345-431a-a01a-73a53fef7597 # DO NOT CHANGE - Unique ID of the project from which this file was generated
+  title: turnover_forecast
+  timezone: null
+  appTheme: SYS_PREF
+  codeLanguage: PYTHON
+  status: null
+  categories: []
+  castDecimalsDefault: true
+  logicQueryCacheTimeout: null
+  publishedQueryCacheTimeout: null
+  hexType: PROJECT
+  allowExecutionReordering: true
+  prerunApp: false
+  cachePublishedAppState: true
+  refreshStalePublishedApp: false
+  autoRerunApp: true
+projectAssets:
+  dataConnections: []
+  envVars: []
+  secrets: []
+sharedAssets:
+  secrets: []
+  vcsPackages: []
+  dataConnections:
+    - dataConnectionId: 4391debb-0cd6-494c-bfa2-167e8ad6c4a0 # SNOWFLAKE_TRIAL (snowflake)
+    - dataConnectionId: cc4f7aef-f3dc-4259-b8a2-bd93d16d4279 # [Demo] Hex Public Data (snowflake)
+  externalFileIntegrations: []
+cells:
+  - cellType: BLOCK
+    cellId: 176822e2-e28c-46a4-96d0-1f88073b4e81 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      blockConfig:
+        sqlCellId: e1be546f-cff1-43b2-86a5-2093dc18df16
+        chartCellId: 15c73836-ed0d-429c-a08d-39cdf920e11c
+        activeTab: display
+      cells:
+        - cellType: SQL
+          cellId: e1be546f-cff1-43b2-86a5-2093dc18df16
+          cellLabel: null
+          config:
+            source: select * from turnover;
+            dataFrameCell: false
+            dataConnectionId: 4391debb-0cd6-494c-bfa2-167e8ad6c4a0
+            resultVariableName: dataframe
+            useRichDisplay: true
+            sqlCellOutputType: PANDAS
+            useQueryMode: false
+            castDecimals: true
+            useNativeDates: true
+            outputFilteredResult: true
+            allowDuplicateColumns: false
+            tableDisplayConfig:
+              pageSize: 50
+              height: null
+              hideIcons: false
+              hideIndex: false
+              defaultSortColumn: null
+              defaultSortIndexColumn: null
+              defaultSortDirection: ASC
+              conditionalFormatting: null
+              calcs: null
+              filters: null
+              columnProperties:
+                - originalName: NET_TURNOVER
+                  renameTo: null
+                  size: 141
+                  wrapText: null
+                  displayFormat: null
+                - originalName: TIME
+                  renameTo: null
+                  size: 195
+                  wrapText: null
+                  displayFormat: null
+                - originalName: row-index-0
+                  renameTo: null
+                  size: 46
+                  wrapText: null
+                  displayFormat: null
+              columnOrdering: null
+              customColumnOrdering: null
+              pinnedColumns: null
+              hiddenColumns: null
+              pinIndexColumns: false
+              showAggregations: false
+              columnAggregations: null
+        - cellType: CHARTV2
+          cellId: 15c73836-ed0d-429c-a08d-39cdf920e11c
+          cellLabel: null
+          config:
+            height: null
+            chartSpec:
+              type: layered
+              layers:
+                - id: 0311cb55-1711-4cde-aed7-a2a60957d0e7
+                  xAxis:
+                    type: number
+                    style:
+                      grid:
+                        style: solid
+                      ticks: {}
+                      labels: {}
+                    dataFrameColumn: NET_TURNOVER
+                  series:
+                    - id: 98d46c43-7d1c-4865-8012-76ae9871b6b8
+                      type: bar
+                      axis:
+                        type: datetime
+                        style:
+                          grid:
+                            style: solid
+                          ticks: {}
+                          labels: {}
+                        aggregate: count
+                      dataFrameColumns:
+                        - TIME
+                      colorOrder: ascending
+                      color:
+                        type: static
+                      opacity:
+                        type: static
+                        value: 1
+                      tooltip:
+                        type: auto
+                      barWidth: 1
+                      orientation: vertical
+                      layout: stacked
+                  dataFrame: dataframe
+              settings:
+                legend:
+                  position: right
+                tooltip: true
+                selectionEnabled: false
+            chartSelection: {}
+            colorMappings: {}
+            resultVariable: chart_result
+            outputResult: false
+            displayType: CHART
+            displayTableConfig: null
+  - cellType: CODE
+    cellId: d1e8b7d9-6c48-42c6-9ee6-ff4860d61bc9 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        import pandas as pd
+
+        from sklearn.ensemble import IsolationForest
+
+        # Fit the model
+        model = IsolationForest(contamination=0.1)  # Assuming 10% of data is anomalous
+        dataframe['label'] = model.fit_predict(dataframe[['NET_TURNOVER']])
+
+        # Convert -1 (anomaly) to 1 and 1 (normal) to 0
+        dataframe['label'] = dataframe['label'].apply(lambda x: 1 if x == -1 else 0)
+
+        print(dataframe)
+  - cellType: CODE
+    cellId: 9eeda34c-39fd-483a-9e10-e980e0c97237 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        import pandas as pd
+
+        from sklearn.ensemble import IsolationForest
+
+        # Fit the model
+        model = IsolationForest(contamination=0.1)  # Assuming 10% of data is anomalous
+        dataframe['label'] = model.fit_predict(dataframe[['NET_TURNOVER']])
+
+        # Convert -1 (anomaly) to 1 and 1 (normal) to 0
+        dataframe['label'] = dataframe['label'].apply(lambda x: 1 if x == -1 else 0)
+
+        print(dataframe)
+appLayout:
+  visibleMetadataFields:
+    - NAME
+    - DESCRIPTION
+    - AUTHOR
+    - LAST_EDITED
+    - LAST_RUN
+    - CATEGORIES
+    - STATUS
+    - TABLE_OF_CONTENTS
+  fullWidth: false
+  tabs:
+    - name: Tab 1
+      rows:
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: e1be546f-cff1-43b2-86a5-2093dc18df16
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 9eeda34c-39fd-483a-9e10-e980e0c97237
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+sharedFilters: []
