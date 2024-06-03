@@ -1,12 +1,27 @@
+import snowflake.connector
 import pandas as pd
-
+from snowflake.connector import DictCursor
+from snowflake.snowpark.session import Session
+from snowflake.snowpark import DataFrame
+from snowflake.snowpark.functions import col
 from sklearn.ensemble import IsolationForest
 
-# Fit the model
-model = IsolationForest(contamination=0.1)  # Assuming 10% of data is anomalous
-dataframe['label'] = model.fit_predict(dataframe[['NET_TURNOVER']])
+connection_params = {
+    "ACCOUNT": SF_ACCOUNT,
+    "USER": SF_USER,
+    "PASSWORD": SF_PASSWORD,
+    "ROLE": SF_ROLE,
+    "WAREHOUSE": SF_WAREHOUSE,
+    "DATABASE": SF_DATABASE,
+    "SCHEMA": SF_SCHEMA,
+}
 
-# Convert -1 (anomaly) to 1 and 1 (normal) to 0
-dataframe['label'] = dataframe['label'].apply(lambda x: 1 if x == -1 else 0)
 
-print(dataframe)
+def hello(session: Session) -> DataFrame:
+    df = session.table("SNOWLENS.DEMO.TURNOVER")
+    return df
+
+
+if __name__ == "__main__":
+    session = Session.builder.configs(connection_params).create()
+    print(hello(session).show())
