@@ -3,7 +3,7 @@ name: Extract Source Code
 on:
   push:
     paths:
-      - 'TURNOVER/**'  # Specify the path to your YAML file
+      - 'hex/**'  # Specify the path to your YAML file
   workflow_dispatch:
 
 jobs:
