@@ -6,22 +6,37 @@ from snowflake.snowpark import DataFrame
 from snowflake.snowpark.functions import col
 from sklearn.ensemble import IsolationForest
 
-connection_params = {
-    "ACCOUNT": SF_ACCOUNT,
-    "USER": SF_USER,
-    "PASSWORD": SF_PASSWORD,
-    "ROLE": SF_ROLE,
-    "WAREHOUSE": SF_WAREHOUSE,
-    "DATABASE": SF_DATABASE,
-    "SCHEMA": SF_SCHEMA,
+conn_params = {
+    "user": "Manthankumar",
+    "password": "Ranamanthan@123",
+    "account": "wyb94529",
+    "warehouse": "COMPUTE_WH",
+    "role": "ACCOUNTADMIN",
+    "database": "SNOWLENS",
+    "schema": "DEMO",
 }
 
+conn = snowflake.connector.connect(
+    user=conn_params['user'],
+    password=conn_params['password'],
+    account=conn_params['account'],
+    warehouse=conn_params['warehouse'],
+    role=conn_params['role'],
+    database=conn_params['database'],
+    schema=conn_params['schema']
+)
+cur = conn.cursor()
+query = "SELECT * FROM turnover"
+cur.execute(query)
 
-def hello(session: Session) -> DataFrame:
-    df = session.table("SNOWLENS.DEMO.TURNOVER")
-    return df
+df = cur.fetch_pandas_all()
 
+model = IsolationForest(contamination=0.1)  
+df['label'] = model.fit_predict(df[['NET_TURNOVER']])
 
-if __name__ == "__main__":
-    session = Session.builder.configs(connection_params).create()
-    print(hello(session).show())
+df['label'] = df['label'].apply(lambda x: 1 if x == -1 else 0)
+
+cur.close()
+conn.close()
+
+print(df)
