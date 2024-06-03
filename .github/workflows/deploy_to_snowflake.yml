@@ -84,7 +84,7 @@ jobs:
           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
-          latest_file=$(ls -t outputs/*.py | head -n 1)
+          latest_file=$(ls -tp outputs/*.py | grep -v / | head -n 1)
           echo "Deploying $latest_file"
           python $latest_file
 
