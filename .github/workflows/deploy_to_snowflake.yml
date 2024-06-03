@@ -28,7 +28,7 @@ jobs:
 
       - name: Install sklearn
         run: |
-          pip install sklearn
+          pip install scikit-learn
 
       - name: Install snowflake-connector-python
         run: |
