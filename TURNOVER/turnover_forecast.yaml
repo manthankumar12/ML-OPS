@@ -1,6 +1,6 @@
 schemaVersion: 3
 meta:
-  sourceVersionId: a74114f7-c5fe-48d9-9cc5-5fcaebf53af5 # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
+  sourceVersionId: bf22ed02-53c4-4282-96c5-337be85284b5 # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
   description: null
   projectId: 6de9a3fd-0345-431a-a01a-73a53fef7597 # DO NOT CHANGE - Unique ID of the project from which this file was generated
   title: turnover_forecast
@@ -37,11 +37,60 @@ sharedAssets:
     - dataConnectionId: cc4f7aef-f3dc-4259-b8a2-bd93d16d4279 # [Demo] Hex Public Data (snowflake)
   externalFileIntegrations: []
 cells:
+  - cellType: SQL
+    cellId: e7c900f6-2c23-4a7e-b5cd-85b968e49de6 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: select * from turnover;
+      dataFrameCell: false
+      dataConnectionId: 4391debb-0cd6-494c-bfa2-167e8ad6c4a0
+      resultVariableName: dataframe
+      useRichDisplay: true
+      sqlCellOutputType: PANDAS
+      useQueryMode: false
+      castDecimals: true
+      useNativeDates: true
+      outputFilteredResult: true
+      allowDuplicateColumns: false
+      tableDisplayConfig:
+        pageSize: 50
+        height: null
+        hideIcons: false
+        hideIndex: false
+        defaultSortColumn: null
+        defaultSortIndexColumn: null
+        defaultSortDirection: ASC
+        conditionalFormatting: null
+        calcs: null
+        filters: null
+        columnProperties:
+          - originalName: NET_TURNOVER
+            renameTo: null
+            size: 144
+            wrapText: null
+            displayFormat: null
+          - originalName: TIME
+            renameTo: null
+            size: 120
+            wrapText: null
+            displayFormat: null
+          - originalName: row-index-0
+            renameTo: null
+            size: 46
+            wrapText: null
+            displayFormat: null
+        columnOrdering: null
+        customColumnOrdering: null
+        pinnedColumns: null
+        hiddenColumns: null
+        pinIndexColumns: false
+        showAggregations: false
+        columnAggregations: null
   - cellType: CODE
     cellId: af286fb6-ba50-4a5f-9d5a-a9e2bbd89faa # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
     cellLabel: null
     config:
-      source: |-
+      source: |
         import snowflake.connector
         import pandas as pd
         from snowflake.connector import DictCursor
@@ -50,27 +99,42 @@ cells:
         from snowflake.snowpark.functions import col
         from sklearn.ensemble import IsolationForest
 
-        connection_params = {
-            "ACCOUNT": SF_ACCOUNT,
-            "USER": SF_USER,
-            "PASSWORD": SF_PASSWORD,
-            "ROLE": SF_ROLE,
-            "WAREHOUSE": SF_WAREHOUSE,
-            "DATABASE": SF_DATABASE,
-            "SCHEMA": SF_SCHEMA,
+        conn_params = {
+            "user": "Manthankumar",
+            "password": "Ranamanthan@123",
+            "account": "wyb94529",
+            "warehouse": "COMPUTE_WH",
+            "role": "ACCOUNTADMIN",
+            "database": "SNOWLENS",
+            "schema": "DEMO",
         }
 
+        conn = snowflake.connector.connect(
+            user=conn_params['user'],
+            password=conn_params['password'],
+            account=conn_params['account'],
+            warehouse=conn_params['warehouse'],
+            role=conn_params['role'],
+            database=conn_params['database'],
+            schema=conn_params['schema']
+        )
+        cur = conn.cursor()
+        query = "SELECT * FROM turnover"
+        cur.execute(query)
 
-        def hello(session: Session) -> DataFrame:
-            df = session.table("SNOWLENS.DEMO.TURNOVER")
-            return df
+        df = cur.fetch_pandas_all()
 
+        model = IsolationForest(contamination=0.1)  
+        df['label'] = model.fit_predict(df[['NET_TURNOVER']])
 
-        if __name__ == "__main__":
-            session = Session.builder.configs(connection_params).create()
-            print(hello(session).show())
+        df['label'] = df['label'].apply(lambda x: 1 if x == -1 else 0)
+
+        cur.close()
+        conn.close()
+
+        print(df)
   - cellType: CODE
-    cellId: 01a83025-4fdf-493e-a09e-d03c697c9758 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellId: 0e017df7-f8b6-428f-a08d-620df8f66ec6 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
     cellLabel: null
     config:
       source: |-
@@ -82,25 +146,40 @@ cells:
         from snowflake.snowpark.functions import col
         from sklearn.ensemble import IsolationForest
 
-        connection_params = {
-            "ACCOUNT": SF_ACCOUNT,
-            "USER": SF_USER,
-            "PASSWORD": SF_PASSWORD,
-            "ROLE": SF_ROLE,
-            "WAREHOUSE": SF_WAREHOUSE,
-            "DATABASE": SF_DATABASE,
-            "SCHEMA": SF_SCHEMA,
+        conn_params = {
+            "user": "Manthankumar",
+            "password": "Ranamanthan@123",
+            "account": "wyb94529",
+            "warehouse": "COMPUTE_WH",
+            "role": "ACCOUNTADMIN",
+            "database": "SNOWLENS",
+            "schema": "DEMO",
         }
 
+        conn = snowflake.connector.connect(
+            user=conn_params['user'],
+            password=conn_params['password'],
+            account=conn_params['account'],
+            warehouse=conn_params['warehouse'],
+            role=conn_params['role'],
+            database=conn_params['database'],
+            schema=conn_params['schema']
+        )
+        cur = conn.cursor()
+        query = "SELECT * FROM turnover"
+        cur.execute(query)
 
-        def hello(session: Session) -> DataFrame:
-            df = session.table("SNOWLENS.DEMO.TURNOVER")
-            return df
+        df = cur.fetch_pandas_all()
 
+        model = IsolationForest(contamination=0.1)  
+        df['label'] = model.fit_predict(df[['NET_TURNOVER']])
 
-        if __name__ == "__main__":
-            session = Session.builder.configs(connection_params).create()
-            print(hello(session).show())
+        df['label'] = df['label'].apply(lambda x: 1 if x == -1 else 0)
+
+        cur.close()
+        conn.close()
+
+        print(df)
 appLayout:
   visibleMetadataFields:
     - NAME
@@ -122,7 +201,7 @@ appLayout:
                 - showSource: false
                   hideOutput: false
                   type: CELL
-                  cellId: 01a83025-4fdf-493e-a09e-d03c697c9758
+                  cellId: 0e017df7-f8b6-428f-a08d-620df8f66ec6
                   sharedFilterId: null
                   height: null
                   showLabel: true
