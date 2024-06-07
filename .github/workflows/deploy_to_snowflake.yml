@@ -206,8 +206,6 @@ jobs:
         run: |
           python -c "
 import os
-import snowflake.connector
-import pandas as pd
 
 # Connect to Snowflake
 conn = snowflake.connector.connect(
