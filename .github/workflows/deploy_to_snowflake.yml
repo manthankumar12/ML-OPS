@@ -69,7 +69,7 @@ name: Deploy to Snowflake
 on:
   push:
     paths:
-      - 'outputs/**'
+      - 'outputs/**/*.py'  # Trigger only on .py files in the outputs directory
   workflow_dispatch:
 
 jobs:
@@ -126,3 +126,4 @@ jobs:
             echo "No Python file found in outputs directory."
             exit 1
           fi
+
