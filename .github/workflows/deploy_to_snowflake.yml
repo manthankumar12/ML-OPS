@@ -227,7 +227,7 @@ df = pd.DataFrame(data[1:], columns=data[0])  # Adjust if the result format is d
 
 # Write the DataFrame to Snowflake
 table_name = 'deploy_results'
-df.to_sql(table_name, con=conn, if_exists='replace', index=False)
+df.to_sql(deploy_results, con=conn, if_exists='replace', index=False)
 conn.close()
 "
 
