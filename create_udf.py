@@ -1,4 +1,5 @@
 import snowflake.connector
+import os
 
 def create_udf():
     # Connection parameters
