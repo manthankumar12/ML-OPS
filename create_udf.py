@@ -3,7 +3,6 @@ import snowflake.connector
 import os
 
 def create_udf():
-
      conn_params = {
         "user": "${{ secrets.SNOWFLAKE_USER }}",
         "password": "${{ secrets.SNOWFLAKE_PASSWORD }}",
@@ -12,10 +11,10 @@ def create_udf():
         "role": "${{ secrets.SNOWFLAKE_ROLE }}",
         "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
         "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
-    }
-    
+     }
+      
     # Establish connection
-connection = snowflake.connector.connect(
+     connection = snowflake.connector.connect(
         user=conn_params['user'],
         password=conn_params['password'],
         account=conn_params['account'],
@@ -23,7 +22,7 @@ connection = snowflake.connector.connect(
         role=conn_params['role'],
         database=conn_params['database'],
         schema=conn_params['schema']
-)
+     )
 
     # Read the Python function to be used in UDF
 with open('outputs/turnover_forecast.py', 'r') as file:
