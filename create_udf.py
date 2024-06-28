@@ -18,7 +18,7 @@ def create_udf():
         "user": "Manthankumar",
         "password": "Ranamanthan@123",
         "account": "wyb94529",
-        "warehouse": "COMPUTE_WH}",
+        "warehouse": "COMPUTE_WH",
         "role": "ACCOUNTADMIN",
         "database": "SNOWLENS",
         "schema": "DEMO"
