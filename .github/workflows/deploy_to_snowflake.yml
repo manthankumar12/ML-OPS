@@ -254,6 +254,73 @@
 
 
 
+# name: Deploy to Snowflake
+
+# on:
+#   push:
+#     paths:
+#       - 'outputs/**/*.py'  # Trigger only on .py files in the outputs directory
+#   workflow_dispatch:
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+
+#       - name: Install Python
+#         uses: actions/setup-python@v2.2.1
+#         with:
+#           python-version: 3.8.x
+
+#       - name: Install Snowflake
+#         run: |
+#           pip install snowflake
+
+#       - name: Install pandas
+#         run: |
+#           pip install snowflake-connector-python[pandas]
+
+#       - name: Install sklearn
+#         run: |
+#           pip install scikit-learn
+
+#       - name: Install snowflake-connector-python
+#         run: |
+#           pip install snowflake-connector-python
+
+#       - name: Identify and Deploy Python Code
+#         env:
+#           SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+#           SF_USERNAME: ${{ secrets.SNOWFLAKE_USER }}
+#           SF_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+#           SF_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+#           SF_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+#           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+#           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+#         run: |
+#           # Check out the most recent commit
+#           git fetch --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+#           git checkout origin/main -- outputs
+
+#           # Find the most recent Python file in the outputs directory
+#           latest_file=$(find outputs -type f -name "*.py" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2)
+#           echo "Most recent file: $latest_file"
+          
+#           # Check if the file exists
+#           if [ -f "$latest_file" ]; then
+#             echo "Deploying $latest_file"
+#             python "$latest_file"
+#           else
+#             echo "No Python file found in outputs directory."
+#             exit 1
+#           fi
+
+
+
+
+
 name: Deploy to Snowflake
 
 on:
@@ -274,23 +341,11 @@ jobs:
         with:
           python-version: 3.8.x
 
-      - name: Install Snowflake
+      - name: Install Dependencies
         run: |
-          pip install snowflake
+          pip install snowflake-connector-python snowflake-snowpark-python pandas scikit-learn
 
-      - name: Install pandas
-        run: |
-          pip install snowflake-connector-python[pandas]
-
-      - name: Install sklearn
-        run: |
-          pip install scikit-learn
-
-      - name: Install snowflake-connector-python
-        run: |
-          pip install snowflake-connector-python
-
-      - name: Identify and Deploy Python Code
+      - name: Deploy UDF to Snowflake
         env:
           SF_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SF_USERNAME: ${{ secrets.SNOWFLAKE_USER }}
@@ -300,18 +355,24 @@ jobs:
           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
-          # Check out the most recent commit
-          git fetch --depth=1 origin +refs/heads/main:refs/remotes/origin/main
-          git checkout origin/main -- outputs
-
           # Find the most recent Python file in the outputs directory
           latest_file=$(find outputs -type f -name "*.py" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2)
           echo "Most recent file: $latest_file"
           
-          # Check if the file exists
           if [ -f "$latest_file" ]; then
             echo "Deploying $latest_file"
-            python "$latest_file"
+            
+            # Replace placeholders with actual secret values
+            sed -i 's/YOUR_USER/${{ secrets.SNOWFLAKE_USER }}/' create_udf.py
+            sed -i 's/YOUR_PASSWORD/${{ secrets.SNOWFLAKE_PASSWORD }}/' create_udf.py
+            sed -i 's/YOUR_ACCOUNT/${{ secrets.SNOWFLAKE_ACCOUNT }}/' create_udf.py
+            sed -i 's/YOUR_WAREHOUSE/${{ secrets.SNOWFLAKE_WAREHOUSE }}/' create_udf.py
+            sed -i 's/YOUR_ROLE/${{ secrets.SNOWFLAKE_ROLE }}/' create_udf.py
+            sed -i 's/YOUR_DATABASE/${{ secrets.SNOWFLAKE_DATABASE }}/' create_udf.py
+            sed -i 's/YOUR_SCHEMA/${{ secrets.SNOWFLAKE_SCHEMA }}/' create_udf.py
+
+            # Execute the Python script to create the UDF in Snowflake
+            python create_udf.py
           else
             echo "No Python file found in outputs directory."
             exit 1
