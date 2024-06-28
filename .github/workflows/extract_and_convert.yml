@@ -46,12 +46,55 @@
 
 
 
+# name: Extract Source Code
+
+# on:
+#   push:
+#     paths:
+#       - 'hex/**'  # Specify the path to your YAML file
+#   workflow_dispatch:
+
+# jobs:
+#   extract_source_code:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
+
+#       - name: Setup Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.x'  # Use Python 3.x
+
+#       - name: Install PyYAML
+#         run: pip install pyyaml
+
+#       - name: Extract Source Code from Most Recent File
+#         id: save_source_code
+#         run: |
+#           output_dir=""
+#           latest_file=$(git log -1 --name-only --pretty=format: | grep '^hex/.*\.yaml$' | head -n 1)
+#           saved_file_path=$(python extract_source_code.py ${{ github.workspace }}/$latest_file $output_dir)
+#           echo "::set-output name=saved_file_path::$saved_file_path"
+        
+#       - name: Commit and Push Changes
+#         run: |
+#           git config --local user.email "manthan.kumar@progressresidential.com"
+#           git config --local user.name "manthankumar12"
+#           cd ${{ github.workspace }} # Change directory to where the file is saved
+#           git add .
+#           git commit -m "Extracted source code from YAML"
+#           git push
+
+
+
 name: Extract Source Code
 
 on:
   push:
     paths:
-      - 'hex/**'  # Specify the path to your YAML file
+      - 'hex/**'
   workflow_dispatch:
 
 jobs:
@@ -65,7 +108,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Use Python 3.x
+          python-version: '3.x'
 
       - name: Install PyYAML
         run: pip install pyyaml
@@ -73,17 +116,14 @@ jobs:
       - name: Extract Source Code from Most Recent File
         id: save_source_code
         run: |
-          output_dir=""
+          output_dir="outputs"
           latest_file=$(git log -1 --name-only --pretty=format: | grep '^hex/.*\.yaml$' | head -n 1)
-          saved_file_path=$(python extract_source_code.py ${{ github.workspace }}/$latest_file $output_dir)
-          echo "::set-output name=saved_file_path::$saved_file_path"
+          python extract_source_code.py ${{ github.workspace }}/$latest_file $output_dir
         
       - name: Commit and Push Changes
         run: |
           git config --local user.email "manthan.kumar@progressresidential.com"
           git config --local user.name "manthankumar12"
-          cd ${{ github.workspace }} # Change directory to where the file is saved
           git add .
           git commit -m "Extracted source code from YAML"
           git push
-
