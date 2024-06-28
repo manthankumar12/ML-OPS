@@ -89,7 +89,7 @@ def create_udf():
         "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
     }
     # Establish connection
- try:
+try:
     connection = snowflake.connector.connect(
         user=conn_params['user'],
         password=conn_params['password'],
@@ -101,7 +101,7 @@ def create_udf():
     )
     print("Connected to Snowflake successfully!")
     # Perform further operations with Snowflake here
- except Exception as e:
+except Exception as e:
     print(f"Error connecting to Snowflake: {e}")
 
     # Read the Python function to be used in UDF
