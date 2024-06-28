@@ -11,17 +11,18 @@ def create_udf():
      #    "role": "${{ secrets.SNOWFLAKE_ROLE }}",
      #    "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
      #    "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
-     # }   
-         
+     # }
+
+     
      conn_params = {
-        "user": os.getenv('SNOWFLAKE_USER'),
-        "password": os.getenv('SNOWFLAKE_PASSWORD'),
-        "account": os.getenv('SNOWFLAKE_ACCOUNT'),
-        "warehouse": os.getenv('SNOWFLAKE_WAREHOUSE'),
-        "role": os.getenv('SNOWFLAKE_ROLE'),
-        "database": os.getenv('SNOWFLAKE_DATABASE'),
-        "schema": os.getenv('SNOWFLAKE_SCHEMA')
-     }
+        "user": "Manthankumar",
+        "password": "Ranamanthan@123",
+        "account": "wyb94529",
+        "warehouse": "COMPUTE_WH}",
+        "role": "ACCOUNTADMIN",
+        "database": "SNOWLENS",
+        "schema": "DEMO"
+     }  
       
     # Establish connection
      connection = snowflake.connector.connect(
