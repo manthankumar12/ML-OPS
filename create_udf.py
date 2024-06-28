@@ -3,27 +3,16 @@ import snowflake.connector
 import os
 
 def create_udf():
-     # conn_params = {
-     #    "user": "${{ secrets.SNOWFLAKE_USER }}",
-     #    "password": "${{ secrets.SNOWFLAKE_PASSWORD }}",
-     #    "account": "${{ secrets.SNOWFLAKE_ACCOUNT }}",
-     #    "warehouse": "${{ secrets.SNOWFLAKE_WAREHOUSE }}",
-     #    "role": "${{ secrets.SNOWFLAKE_ROLE }}",
-     #    "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
-     #    "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
-     # }
-
-     
      conn_params = {
-        "user": "Manthankumar",
-        "password": "Ranamanthan@123",
-        "account": "wyb94529",
-        "warehouse": "COMPUTE_WH",
-        "role": "ACCOUNTADMIN",
-        "database": "SNOWLENS",
-        "schema": "DEMO"
-     }  
-      
+        "user": "${{ secrets.SNOWFLAKE_USER }}",
+        "password": "${{ secrets.SNOWFLAKE_PASSWORD }}",
+        "account": "${{ secrets.SNOWFLAKE_ACCOUNT }}",
+        "warehouse": "${{ secrets.SNOWFLAKE_WAREHOUSE }}",
+        "role": "${{ secrets.SNOWFLAKE_ROLE }}",
+        "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
+        "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
+     }
+
     # Establish connection
      connection = snowflake.connector.connect(
         user=conn_params['user'],
