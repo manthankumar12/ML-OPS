@@ -187,21 +187,9 @@
 #         with:
 #           python-version: 3.8.x
 
-#       - name: Install Snowflake
+#       - name: Install Dependencies
 #         run: |
-#           pip install snowflake
-
-#       - name: Install pandas
-#         run: |
-#           pip install snowflake-connector-python[pandas]
-
-#       - name: Install sklearn
-#         run: |
-#           pip install scikit-learn
-
-#       - name: Install snowflake-connector-python
-#         run: |
-#           pip install snowflake-connector-python
+#           pip install snowflake-connector-python snowflake-snowpark-python pandas scikit-learn
 
 #       - name: Identify and Deploy Python Code
 #         env:
@@ -213,22 +201,56 @@
 #           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
 #           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
 #         run: |
-#           # Check out the most recent commit
-#           git fetch --depth=1 origin +refs/heads/main:refs/remotes/origin/main
-#           git checkout origin/main -- outputs
-
-#           # Find the most recent Python file in the outputs directory
 #           latest_file=$(find outputs -type f -name "*.py" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2)
 #           echo "Most recent file: $latest_file"
           
-#           # Check if the file exists
 #           if [ -f "$latest_file" ]; then
 #             echo "Deploying $latest_file"
-#             python "$latest_file"
+            
+#             # Write the Python script to a temporary file
+#             cat <<EOF > deploy_udf.py
+# import snowflake.connector
+
+# connection = snowflake.connector.connect(
+#     user='${{ secrets.SNOWFLAKE_USER }}',
+#     password='${{ secrets.SNOWFLAKE_PASSWORD }}',
+#     account='${{ secrets.SNOWFLAKE_ACCOUNT }}',
+#     warehouse='${{ secrets.SNOWFLAKE_WAREHOUSE }}',
+#     database='${{ secrets.SNOWFLAKE_DATABASE }}',
+#     schema='${{ secrets.SNOWFLAKE_SCHEMA }}',
+#     role='${{ secrets.SNOWFLAKE_ROLE }}'
+# )
+
+# create_function_sql = f"""
+# CREATE OR REPLACE FUNCTION predict_turnover_udf()
+# RETURNS TABLE (NET_TURNOVER FLOAT, LABEL INT)
+# LANGUAGE PYTHON
+# RUNTIME_VERSION = '3.8'
+# PACKAGES = ('snowflake-snowpark-python', 'pandas', 'scikit-learn')
+# HANDLER = 'turnover_forecast.predict_turnover'
+# AS
+# $$
+# {open(latest_file).read()}
+# $$;
+# """
+
+# with connection.cursor() as cursor:
+#     cursor.execute(create_function_sql)
+#     print("Function created successfully")
+
+# connection.close()
+# EOF
+            
+#             # Execute the Python script
+#             python deploy_udf.py
 #           else
 #             echo "No Python file found in outputs directory."
 #             exit 1
 #           fi
+
+
+
+
 
 
 
@@ -252,9 +274,21 @@ jobs:
         with:
           python-version: 3.8.x
 
-      - name: Install Dependencies
+      - name: Install Snowflake
         run: |
-          pip install snowflake-connector-python snowflake-snowpark-python pandas scikit-learn
+          pip install snowflake
+
+      - name: Install pandas
+        run: |
+          pip install snowflake-connector-python[pandas]
+
+      - name: Install sklearn
+        run: |
+          pip install scikit-learn
+
+      - name: Install snowflake-connector-python
+        run: |
+          pip install snowflake-connector-python
 
       - name: Identify and Deploy Python Code
         env:
@@ -266,46 +300,18 @@ jobs:
           SF_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
           SF_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
         run: |
+          # Check out the most recent commit
+          git fetch --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+          git checkout origin/main -- outputs
+
+          # Find the most recent Python file in the outputs directory
           latest_file=$(find outputs -type f -name "*.py" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2)
           echo "Most recent file: $latest_file"
           
+          # Check if the file exists
           if [ -f "$latest_file" ]; then
             echo "Deploying $latest_file"
-
-            # Create Snowflake UDF
-            python <<EOF
-import snowflake.connector
-
-connection = snowflake.connector.connect(
-    user='${{ secrets.SNOWFLAKE_USER }}',
-    password='${{ secrets.SNOWFLAKE_PASSWORD }}',
-    account='${{ secrets.SNOWFLAKE_ACCOUNT }}',
-    warehouse='${{ secrets.SNOWFLAKE_WAREHOUSE }}',
-    database='${{ secrets.SNOWFLAKE_DATABASE }}',
-    schema='${{ secrets.SNOWFLAKE_SCHEMA }}',
-    role='${{ secrets.SNOWFLAKE_ROLE }}'
-)
-
-create_function_sql = f"""
-CREATE OR REPLACE FUNCTION predict_turnover_udf()
-RETURNS TABLE (NET_TURNOVER FLOAT, LABEL INT)
-LANGUAGE PYTHON
-RUNTIME_VERSION = '3.8'
-PACKAGES = ('snowflake-snowpark-python', 'pandas', 'scikit-learn')
-HANDLER = 'turnover_forecast.predict_turnover'
-AS
-$$
-{open(latest_file).read()}
-$$;
-"""
-
-with connection.cursor() as cursor:
-    cursor.execute(create_function_sql)
-    print("Function created successfully")
-
-connection.close()
-EOF
-
+            python "$latest_file"
           else
             echo "No Python file found in outputs directory."
             exit 1
