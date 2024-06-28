@@ -1,9 +1,10 @@
+
 import snowflake.connector
 import os
 
 def create_udf():
-    
-    conn_params = {
+
+     conn_params = {
         "user": "${{ secrets.SNOWFLAKE_USER }}",
         "password": "${{ secrets.SNOWFLAKE_PASSWORD }}",
         "account": "${{ secrets.SNOWFLAKE_ACCOUNT }}",
@@ -12,6 +13,7 @@ def create_udf():
         "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
         "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
     }
+    
     # Establish connection
 connection = snowflake.connector.connect(
         user=conn_params['user'],
