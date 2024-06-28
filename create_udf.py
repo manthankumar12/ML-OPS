@@ -3,15 +3,25 @@ import snowflake.connector
 import os
 
 def create_udf():
-     conn_params = {
-        "user": "${{ secrets.SNOWFLAKE_USER }}",
-        "password": "${{ secrets.SNOWFLAKE_PASSWORD }}",
-        "account": "${{ secrets.SNOWFLAKE_ACCOUNT }}",
-        "warehouse": "${{ secrets.SNOWFLAKE_WAREHOUSE }}",
-        "role": "${{ secrets.SNOWFLAKE_ROLE }}",
-        "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
-        "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
-     }
+     # conn_params = {
+     #    "user": "${{ secrets.SNOWFLAKE_USER }}",
+     #    "password": "${{ secrets.SNOWFLAKE_PASSWORD }}",
+     #    "account": "${{ secrets.SNOWFLAKE_ACCOUNT }}",
+     #    "warehouse": "${{ secrets.SNOWFLAKE_WAREHOUSE }}",
+     #    "role": "${{ secrets.SNOWFLAKE_ROLE }}",
+     #    "database": "${{ secrets.SNOWFLAKE_DATABASE }}",
+     #    "schema": "${{ secrets.SNOWFLAKE_SCHEMA }}"
+     # }
+      
+    conn_params = {
+        "user": os.getenv('SNOWFLAKE_USER'),
+        "password": os.getenv('SNOWFLAKE_PASSWORD'),
+        "account": os.getenv('SNOWFLAKE_ACCOUNT'),
+        "warehouse": os.getenv('SNOWFLAKE_WAREHOUSE'),
+        "role": os.getenv('SNOWFLAKE_ROLE'),
+        "database": os.getenv('SNOWFLAKE_DATABASE'),
+        "schema": os.getenv('SNOWFLAKE_SCHEMA')
+    }
       
     # Establish connection
      connection = snowflake.connector.connect(
