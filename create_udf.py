@@ -124,5 +124,5 @@ if __name__ == "__main__":
 #     if 'connection' in locals():
 #         connection.close()
 
-if __name__ == "__main__":
-    create_udf()
+# if __name__ == "__main__":
+#     create_udf()
